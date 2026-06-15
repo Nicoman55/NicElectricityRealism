@@ -1,0 +1,73 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Chris\\Desktop\\Games\\7 Days to Die\\GitHub\\ElectricityRealism\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{7F3B9C21-4D8E-4A1F-B6C3-92D0E1F58A74}|ElectricityRealism.csproj|c:\\users\\chris\\desktop\\games\\7 days to die\\github\\electricityrealism\\harmony\\blockpoweredworkstation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7F3B9C21-4D8E-4A1F-B6C3-92D0E1F58A74}|ElectricityRealism.csproj|solutionrelative:harmony\\blockpoweredworkstation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7F3B9C21-4D8E-4A1F-B6C3-92D0E1F58A74}|ElectricityRealism.csproj|C:\\Users\\Chris\\Desktop\\Games\\7 Days to Die\\GitHub\\ElectricityRealism\\harmony\\nicelectricityrealism.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7F3B9C21-4D8E-4A1F-B6C3-92D0E1F58A74}|ElectricityRealism.csproj|solutionrelative:harmony\\nicelectricityrealism.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7F3B9C21-4D8E-4A1F-B6C3-92D0E1F58A74}|ElectricityRealism.csproj|C:\\Users\\Chris\\Desktop\\Games\\7 Days to Die\\GitHub\\ElectricityRealism\\harmony\\tileentitypoweredworkstation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7F3B9C21-4D8E-4A1F-B6C3-92D0E1F58A74}|ElectricityRealism.csproj|solutionrelative:harmony\\tileentitypoweredworkstation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "NicElectricityRealism.cs",
+              "DocumentMoniker": "C:\\Users\\Chris\\Desktop\\Games\\7 Days to Die\\GitHub\\ElectricityRealism\\Harmony\\NicElectricityRealism.cs",
+              "RelativeDocumentMoniker": "Harmony\\NicElectricityRealism.cs",
+              "ToolTip": "C:\\Users\\Chris\\Desktop\\Games\\7 Days to Die\\GitHub\\ElectricityRealism\\Harmony\\NicElectricityRealism.cs",
+              "RelativeToolTip": "Harmony\\NicElectricityRealism.cs",
+              "ViewState": "AgIAAC4EAAAAAAAAAAAcwEYEAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T19:35:12.194Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TileEntityPoweredWorkstation.cs",
+              "DocumentMoniker": "C:\\Users\\Chris\\Desktop\\Games\\7 Days to Die\\GitHub\\ElectricityRealism\\Harmony\\TileEntityPoweredWorkstation.cs",
+              "RelativeDocumentMoniker": "Harmony\\TileEntityPoweredWorkstation.cs",
+              "ToolTip": "C:\\Users\\Chris\\Desktop\\Games\\7 Days to Die\\GitHub\\ElectricityRealism\\Harmony\\TileEntityPoweredWorkstation.cs",
+              "RelativeToolTip": "Harmony\\TileEntityPoweredWorkstation.cs",
+              "ViewState": "AgIAABwCAAAAAAAAAADwvyoCAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T19:35:13.742Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "BlockPoweredWorkstation.cs",
+              "DocumentMoniker": "C:\\Users\\Chris\\Desktop\\Games\\7 Days to Die\\GitHub\\ElectricityRealism\\Harmony\\BlockPoweredWorkstation.cs",
+              "RelativeDocumentMoniker": "Harmony\\BlockPoweredWorkstation.cs",
+              "ToolTip": "C:\\Users\\Chris\\Desktop\\Games\\7 Days to Die\\GitHub\\ElectricityRealism\\Harmony\\BlockPoweredWorkstation.cs",
+              "RelativeToolTip": "Harmony\\BlockPoweredWorkstation.cs",
+              "ViewState": "AgIAADABAAAAAAAAAAAmwDUBAABMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T19:35:09.475Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

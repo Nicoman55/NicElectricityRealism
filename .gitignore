@@ -1,0 +1,7 @@
+/bin
+/obj
+/packages
+/0_WORK
+.vstags
+*.pdb
+packages.config

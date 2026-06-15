@@ -1,0 +1,62 @@
+<configs>
+
+	<!--
+	    ElectricityRealism — blocks.xml
+	    ==================================
+	    Overrides vanilla player-built workstations so they use our
+	    custom BlockPoweredWorkstation class and carry a TileEntityPoweredWorkstation
+	    that plugs them into the electricity grid.
+
+	    Key design choices
+	    ─────────────────
+	    • We use <set> to replace only the Class property of each existing vanilla
+	      block, leaving every other property (model, sounds, material, shape,
+	      drops, recipes, etc.) completely untouched.  This makes the mod
+	      maximally compatible with other mods that also patch these blocks.
+
+	    • RequiredPower is appended as a new property (not present on vanilla
+	      workstations) so the power grid knows how much wattage each station draws.
+	      Values are read back by TileEntityPowered_InitializePowerData after load.
+
+	    Power budget reference (one Generator Bank = 300 W):
+	      Forge         	50 W   — motorised bellows, storage mechanism
+		  Workbench         50 W   — motorised saws, drill, welder
+	      Cement Mixer      75 W   — large electric drum motor
+	      Chemistry Station 25 W   — heating element + fluid pump
+	      ─────────────────────────
+	      All three combined 150 W  — fits comfortably on one generator
+	-->
+
+	<!-- FORGE -->
+	<set xpath="/blocks/block[@name='forge']/property[@name='Class']/@value">
+		ElectricityRealism.BlockPoweredWorkstation, ElectricityRealism
+	</set>
+	<set xpath="/blocks/block[@name='forge']/property[@name='ParticleOffset']/@value">0,0.6,0.5</set>
+	<append xpath="/blocks/block[@name='forge']">
+		<property name="RequiredPower" value="50"/>
+	</append>
+
+	<!-- WORKBENCH -->
+	<set xpath="/blocks/block[@name='workbench']/property[@name='Class']/@value">
+		ElectricityRealism.BlockPoweredWorkstation, ElectricityRealism
+	</set>
+	<append xpath="/blocks/block[@name='workbench']">
+		<property name="RequiredPower" value="50"/>
+	</append>
+
+	<!-- CEMENT MIXER -->
+	<set xpath="/blocks/block[@name='cementMixer']/property[@name='Class']/@value">
+		ElectricityRealism.BlockPoweredWorkstation, ElectricityRealism
+	</set>
+	<append xpath="/blocks/block[@name='cementMixer']">
+		<property name="RequiredPower" value="75"/>
+	</append>
+
+	<!-- CHEMISTRY STATION -->
+	<set xpath="/blocks/block[@name='chemistryStation']/property[@name='Class']/@value">
+		ElectricityRealism.BlockPoweredWorkstation, ElectricityRealism
+	</set>
+	<append xpath="/blocks/block[@name='chemistryStation']">
+		<property name="RequiredPower" value="25"/>
+	</append>
+</configs>

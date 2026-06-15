@@ -1,0 +1,2 @@
+Key,File,Type,UsedInMainMenu,NoTranslate,english,Context/Notes
+electricityRealismNoPower,blocks,Menu,,,"Requires power — connect to an active electricity grid.",Tooltip shown when player tries to open an unpowered workstation
