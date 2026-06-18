@@ -46,18 +46,23 @@ namespace ElectricityRealism
         //private RecipeQueueItem[] pausedQueue = null;
         private bool wasReceivingPower = true;
         private bool wasBurningBeforePowerCut = false;
-        
+
         // ── IPowered implementation ──────────────────────────────────────────────
 
         public bool IsPowered
         {
             get
             {
-                if (SingletonMonoBehaviour<ConnectionManager>.Instance.IsServer)
-                {
-                    return this.PowerItem != null && this.PowerItem.IsPowered;
-                }
-                return this.isPowered;
+                // PowerItem.IsPowered is replicated to clients by the vanilla power
+                // system (lights/generators rely on this), so it's safe to read
+                // unconditionally here. The previous client-only branch returned the
+                // private `isPowered` field, which was never assigned anywhere in this
+                // class and was therefore always false on clients — causing the
+                // "craft" transform (animation/sound) to be permanently disabled
+                // client-side for any workstation whose visible "running" cue isn't
+                // also masked by a server-meta-driven particle effect (i.e. the
+                // cement mixer, which has no ParticleName).
+                return this.PowerItem != null && this.PowerItem.IsPowered;
             }
         }
 
@@ -70,7 +75,7 @@ namespace ElectricityRealism
             set { this.requiredPower = value; }
         }
 
-        
+
         // Change PowerUsed to reflect actual current draw:
         public int PowerUsed
         {
@@ -148,7 +153,7 @@ namespace ElectricityRealism
 
             if (SingletonMonoBehaviour<ConnectionManager>.Instance.IsServer)
             {
-                this.PowerItem = PowerManager.Instance.GetPowerItemByWorldPos(base.ToWorldPos()); 
+                this.PowerItem = PowerManager.Instance.GetPowerItemByWorldPos(base.ToWorldPos());
                 if (NicElectricityRealism.DebugLog)
                 {
                     Debug.Log("ElectricityRealism: GetPowerItemByWorldPos at " + base.ToWorldPos() +
@@ -193,7 +198,7 @@ namespace ElectricityRealism
                 }
                 else
                 {
-                    if (NicElectricityRealism.DebugLog) 
+                    if (NicElectricityRealism.DebugLog)
                         Debug.Log("ElectricityRealism: PowerItem found existing, Children=" +
                         this.PowerItem.Children.Count + " Parent=" +
                         (this.PowerItem.Parent == null ? "NULL" : "OK"));
@@ -457,12 +462,12 @@ namespace ElectricityRealism
 
         public void RemoveParentWithWiringTool(int wiringEntityID)
         {
-            
+
             if (NicElectricityRealism.DebugLog)
-            { 
-                Debug.Log("ElectricityRealism RemoveParentWithWiringTool called"); 
+            {
+                Debug.Log("ElectricityRealism RemoveParentWithWiringTool called");
             }
-             
+
             if (SingletonMonoBehaviour<ConnectionManager>.Instance.IsServer)
             {
                 if (this.PowerItem.Parent != null)
@@ -566,6 +571,20 @@ namespace ElectricityRealism
                     this.visibleChanged = true;
                 }
                 base.UpdateTick(world);
+                // Reconcile power draw every tick after base processes crafting state.
+                // Cannot rely on UpdateVisible for this: vanilla only calls it on visual
+                // state changes (e.g. forge fire going out). The chemistry station has no
+                // such trigger, so UpdateVisible is never called when its queue empties.
+                if (this.PowerItem != null && SingletonMonoBehaviour<ConnectionManager>.Instance.IsServer)
+                {
+                    bool isWorking = this.isBurning || this.IsCrafting;
+                    ushort targetPower = isWorking ? (ushort)this.RequiredPower : (ushort)1;
+                    if (this.PowerItem.RequiredPower != targetPower)
+                    {
+                        this.PowerItem.RequiredPower = targetPower;
+                        this.PowerItem.SendHasLocalChangesToRoot();
+                    }
+                }
             }
             else
             {

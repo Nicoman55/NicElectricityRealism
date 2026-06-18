@@ -9,10 +9,10 @@ namespace ElectricityRealism
 {
     public class NicElectricityRealism : IModApi
     {
-        private const string Version = "v0.53";
-        
         // Global variable for debugging; true: Debugging on, false: Debugging off
-        public static bool DebugLog = true;
+        public static bool DebugLog = false;
+
+        private const string Version = "v0.53";
 
         public void InitMod(Mod mod)
         {
@@ -87,7 +87,7 @@ namespace ElectricityRealism
             {
             }
         }
-    
+
         // ── NetPackageWireToolActions.ProcessPackage patch ───────────────────────────
         //
         // The wire tool's network package casts the tile entity to TileEntityPowered.
@@ -1063,11 +1063,13 @@ namespace ElectricityRealism
                         " IsPowered=" + powered.IsPowered);
                 }
 
-                BlockWorkstation bws =
-                    GameManager.Instance?.World?.GetBlock(powered.ToWorldPos()).Block as BlockWorkstation;
-                if (bws == null) { return; }
-
-                bws.UpdateVisible(powered);
+                // Force a real resync through our patched TileEntityWorkstation.UpdateVisible
+                // (not vanilla's), since that's the only place our craft animation,
+                // emission glow and sound logic lives. Calling bws.UpdateVisible(te) directly
+                // bypasses our Harmony Prefix and runs vanilla's no-op-if-unchanged logic instead,
+                // which is what left the mixer's animation/sound stale after a chunk reload.
+                powered.visibleChanged = true;
+                powered.UpdateVisible();
             }
         }
 
@@ -1087,28 +1089,28 @@ namespace ElectricityRealism
                     powered.visibleCrafting = isCrafting;
                     powered.visibleChanged = true;
                 }
-                //bool isWorking = powered.isBurning || powered.hasRecipeInQueue();
-                bool isWorking = (powered.isBurning || powered.hasRecipeInQueue()) && powered.IsReceivingPower;
+                bool isWorking = (powered.isBurning || isCrafting) && powered.IsReceivingPower;
                 if (isWorking != powered.visibleWorking)
                 {
                     powered.visibleWorking = isWorking;
                     powered.visibleChanged = true;
                 }
 
+                // Secondary reconciliation: also sync power draw whenever UpdateVisible fires.
+                // Primary reconciliation is in TileEntityPoweredWorkstation.UpdateTick.
+                if (powered.PowerItem != null && SingletonMonoBehaviour<ConnectionManager>.Instance.IsServer)
+                {
+                    ushort targetPower = isWorking ? (ushort)powered.RequiredPower : (ushort)1;
+                    if (powered.PowerItem.RequiredPower != targetPower)
+                    {
+                        powered.PowerItem.RequiredPower = targetPower;
+                        powered.PowerItem.SendHasLocalChangesToRoot();
+                    }
+                }
+
                 if (powered.visibleChanged)
                 {
                     powered.visibleChanged = false;
-
-                    // Update power draw based on crafting state.
-                    if (powered.PowerItem != null && SingletonMonoBehaviour<ConnectionManager>.Instance.IsServer)
-                    {
-                        ushort targetPower = isWorking ? (ushort)powered.RequiredPower : (ushort)1;
-                        if (powered.PowerItem.RequiredPower != targetPower)
-                        {
-                            powered.PowerItem.RequiredPower = targetPower;
-                            powered.PowerItem.SendHasLocalChangesToRoot();
-                        }
-                    }
 
                     // Drive the block meta change that triggers particles, glow and sound.
                     World world = GameManager.Instance?.World;
@@ -1135,7 +1137,7 @@ namespace ElectricityRealism
                             Debug.Log("ElectricityRealism: UpdateLightState after meta=" + blockValue.meta);
                         }
                     }
-                    
+
                     BlockEntityData blockEntity = powered.GetChunk()?.GetBlockEntity(powered.ToWorldPos());
                     if (blockEntity == null) { return false; }
                     Transform transform = blockEntity.transform;
@@ -1179,7 +1181,7 @@ namespace ElectricityRealism
                             (powered.IsCrafting && powered.IsPowered) +
                             " craftTransform=" + (craftTransform == null ? "NULL" : "OK"));
                     }
-                    
+
                     if (craftTransform != null)
                         craftTransform.gameObject.SetActive(powered.IsCrafting && powered.IsPowered);
 
@@ -1211,7 +1213,7 @@ namespace ElectricityRealism
                                 if (mat.HasProperty("_EmissionColor"))
                                     originalEmissionColors[renderer.GetInstanceID()] = mat.GetColor("_EmissionColor");
                             }
-                            
+
                             MaterialPropertyBlock mpb = new MaterialPropertyBlock();
                             renderer.GetPropertyBlock(mpb);
                             if (isWorking)

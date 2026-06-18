@@ -276,13 +276,19 @@ namespace ElectricityRealism
             BlockEntityData _ebcd)
         {
             base.OnBlockEntityTransformBeforeActivated(_world, _blockPos, _blockValue, _ebcd);
-            TileEntityWorkstation te =
-                _world.GetTileEntity(_blockPos) as TileEntityWorkstation;
+            TileEntityPoweredWorkstation te =
+                _world.GetTileEntity(_blockPos) as TileEntityPoweredWorkstation;
             if (te != null)
             {
-                BlockWorkstation bws = Block.list[_world.GetBlock(_blockPos).type] as BlockWorkstation;
-                if (bws != null)
-                    bws.UpdateVisible(te);
+                // Force a real resync through our patched TileEntityWorkstation.UpdateVisible
+                // (not vanilla's bws.UpdateVisible(te)), since our craft animation, emission
+                // glow and sound logic only lives in that Harmony Prefix. This is the hook that
+                // fires when the block model becomes active again after a chunk reload, so without
+                // forcing visibleChanged here the mixer (or any workstation) can come back into
+                // range still mid-task but with stale visuals/sound until something else
+                // triggers a genuine state transition.
+                te.visibleChanged = true;
+                te.UpdateVisible();
             }
         }
 

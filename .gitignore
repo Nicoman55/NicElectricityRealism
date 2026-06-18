@@ -5,3 +5,4 @@
 .vstags
 *.pdb
 packages.config
+/.*
